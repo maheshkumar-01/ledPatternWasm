@@ -41,11 +41,18 @@ detect(grayscaleImg, imgWidth, imgHeight) {
     let imgBuffer = this._set_img_buffer(imgWidth, imgHeight, imgWidth); 
     this._Module.HEAPU8.set(grayscaleImg, imgBuffer); // copy grayscale image data
     let detectionsBuffer = this._detect();
+    console.log("Detect Called"); 
     if (detectionsBuffer == 0) { // returned NULL
         this._destroy_buffer(detectionsBuffer);
         return [];
     }
     let detectionsBufferSize = this._Module.getValue(detectionsBuffer, "i32");
+    let led_status = 1;
+    
+    led_status = led_status & detectionsBufferSize;
+    console.log("led status %d",led_status); 
+    detectionsBufferSize = detectionsBufferSize >> 1;
+    console.log("buffer size %d",detectionsBufferSize); 
     if (detectionsBufferSize == 0) { // returned zero detections
         this._destroy_buffer(detectionsBuffer);
         return [];
@@ -58,8 +65,10 @@ detect(grayscaleImg, imgWidth, imgHeight) {
     }
     this._destroy_buffer(detectionsBuffer);
     let detections = JSON.parse(detectionsJson);
+    
+    console.log("Led Status is %d",led_status); 
 
-    return detections;
+    return [detections,led_status];
 }
 
 }

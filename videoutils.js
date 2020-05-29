@@ -1,3 +1,6 @@
+/*
+source : https://github.com/conix-center/AR.js/tree/master/three.js/vendor/js-apriltag/emscripten
+*/
 function VideoUtils() {
     let self = this;
 
