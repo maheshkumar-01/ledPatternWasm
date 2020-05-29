@@ -1,4 +1,4 @@
-#Add prebuilt opencv wasm support libraries (typlically fo8und in opencv/platforms/js/build_wasm/lib
+#Add prebuilt opencv wasm support libraries (typically found in opencv/platforms/js/build_wasm/lib
 LDFLAGS = -LPath_to_opencv_wasm_lib -llibopencv_video -llibopencv_core -llibopencv_objdetect -llibopencv_features2d -llibopencv_imgproc -llibopencv_calib3d
 #Add opencv include path.
 INC = -IPath_to_OpenCV-3.4.4/include/
