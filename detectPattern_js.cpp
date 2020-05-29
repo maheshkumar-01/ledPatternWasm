@@ -165,7 +165,6 @@ extern "C"{
             quad is ON/OFF.   */
         if(x1_>0 && y1_>0 && x2_ > 0 && y2_ > 0)
         {
-            cout << "x1 : " << x1_ << " y1 : " << y1_ << " x2: " << x2_ << " y2: " << y2_ << endl;
             Rect myRoi(x1_,y1_,abs(x2_-x1_),abs(y2_-y1_));
 
             if(myRoi.x >= 0 && myRoi.y >= 0 && myRoi.width + myRoi.x < 
