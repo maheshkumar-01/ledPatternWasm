@@ -20,6 +20,9 @@ The blinking pattern video is currently configured to change its state every
 30 ms. Hence the fps has to be atleast 30 to detect the pattern and 60 for odd/
 even sampling to compensate for the camera saturation.
 
+Also, thresholding values are currently hardcoded which seems to work well.
+Adaptive thresholding needs to be researched. 
+
 Thanks to @nampereira's contribution to the CONIX repository, 
 https://github.com/conix-center/AR.js/blob/master/three.js/vendor/js-apriltag/
 from which the webassembly code was taken from and modified accordingly.
