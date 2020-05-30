@@ -20,6 +20,12 @@ using namespace std;
 using namespace cv;
 
 #define BLINK_PATTERN (uint32_t) 0xC93
+#define LED_ON (1)
+#define LED_OFF (0)
+#define BLUR_KERNEL_SIZE (5)
+#define THRESH_VAL_QUAD (80)
+#define THRESH_VAL_LED (185)
+#define THRESH_MAX (255)
 // maximum size of string for each detection. 
 #define STR_DET_LEN 350
 
@@ -61,9 +67,10 @@ extern "C"{
         Mat gray(Size(g_width, g_height), CV_8UC1, g_img_buf, Mat::AUTO_STEP);
         Mat cam_frame = gray;
         // Perform Gaussian blur with kernel size 5 to reduce image noise
-        GaussianBlur(gray, gray, Size(5, 5), 0);
+        GaussianBlur(gray, gray, Size(BLUR_KERNEL_SIZE, BLUR_KERNEL_SIZE), 
+                    BORDER_DEFAULT);
         // Thresholding to detect bright spots
-        threshold(gray,gray, 80, 255, THRESH_BINARY);
+        threshold(gray,gray, THRESH_VAL_QUAD, THRESH_MAX, THRESH_BINARY);
 
         // Quad Detection code 
         vector<vector<Point> > contours;
@@ -98,7 +105,8 @@ extern "C"{
         {
             // Group all the polynomials detected
             double peri = arcLength(contours[i],true);
-            approxPolyDP( contours[i], contours_poly[i],  0.05*peri, true );
+            float coefficient = 0.05;
+            approxPolyDP( contours[i], contours_poly[i],  coefficient*peri, true );
             // If it is a 4 sided figure
             if(contours_poly[i].size()==4)
             {
@@ -172,14 +180,10 @@ extern "C"{
             && myRoi.height>0 && myRoi.width>0)
             {
                 Mat cropped_img = cam_frame(myRoi);
-                // Threshold value. Pixels less than 185 intensity are discarded
-                double thresh = 185;
-                double maxValue = 255;
-                
+                // Threshold value. Pixels less than 185 intensity are discarded  
                 Mat dst;
-                
                 // Binary thresholing to detect bright spots in the image
-                threshold(cropped_img,dst, thresh, maxValue, THRESH_BINARY);
+                threshold(cropped_img,dst, THRESH_VAL_LED, THRESH_MAX, THRESH_BINARY);
                 // Update the led status of current frame
                 bool res = check_led_status(dst);
                 buffer[0] = buffer[0] | res;
@@ -206,11 +210,11 @@ extern "C"{
             the frame is detected as a contour */
         if(contours.size()==2)
         {
-            return 1;
+            return LED_ON;
         }
         else
         {
-            return 0;
+            return LED_OFF;
         }   
 
     } 
